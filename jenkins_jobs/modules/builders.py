@@ -1793,6 +1793,9 @@ def multijob(registry, xml_parent, data):
     :arg str condition: when to trigger the other job.
         Can be: 'SUCCESSFUL', 'UNSTABLE', 'COMPLETED', 'FAILURE', 'ALWAYS'.
         (default 'SUCCESSFUL')
+    :arg str execution-type: how to execute jobs.
+        Can be: 'PARALLEL', 'SEQUENTIALLY'.
+        (default 'PARALLEL')
 
     :arg list projects: list of projects to include in the MultiJob phase
 

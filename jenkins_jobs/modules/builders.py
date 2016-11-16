@@ -1848,6 +1848,13 @@ def multijob(registry, xml_parent, data):
                                    % ', '.join(conditions_available))
     XML.SubElement(builder, 'continuationCondition').text = condition
 
+    exectype = data.get('execution-type', 'PARALLEL')
+    exectypes_available = ('PARALLEL', 'SEQUENTIALLY')
+    if exectype not in exectypes_available:
+        raise JenkinsJobsException('Multijob execution-type must be one of: %s.'
+                                   % ', '.join(exectypes_available))
+    XML.SubElement(builder, 'executionType').text = exectype
+
     phaseJobs = XML.SubElement(builder, 'phaseJobs')
 
     kill_status_list = ('FAILURE', 'UNSTABLE', 'NEVER')

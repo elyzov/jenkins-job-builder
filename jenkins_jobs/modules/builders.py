@@ -1862,7 +1862,18 @@ def multijob(registry, xml_parent, data):
 
     kill_status_list = ('FAILURE', 'UNSTABLE', 'NEVER')
 
-    for project in data.get('projects', []):
+    projects = data.get('projects', [])
+    if isinstance(projects, dict):
+        template = projects.get('template', {})
+        jobs = projects.get('jobs', [])
+        projects = []
+        for job in jobs:
+            phase = template.copy()
+            phase['name'] = phase['name'].replace('#name', job)
+            projects.append(phase)
+
+
+    for project in projects:
         phaseJob = XML.SubElement(phaseJobs, 'com.tikal.jenkins.plugins.'
                                              'multijob.PhaseJobsConfig')
 

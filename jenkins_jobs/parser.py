@@ -209,6 +209,10 @@ class YamlParser(object):
         newdata.update(data)
         return newdata
 
+    def _getTemplating(self, data):
+        whichtpl = data.get('templating', 'global')
+        return copy.deepcopy(self.data.get('templating', {}).get(whichtpl, {}))
+
     def _formatDescription(self, job):
         if self.keep_desc:
             description = job.get("description", None)
@@ -247,7 +251,7 @@ class YamlParser(object):
             seen = set()
 
             defs = self._applyDefaults({})
-            project = deep_format(project, defs, False, 1)
+            project = deep_format(project, defs, self._getTemplating(defs), False, 1)
             for jobspec in project.get('jobs', []):
                 if isinstance(jobspec, dict):
                     # Singleton dict containing dict of job-specific params
@@ -367,7 +371,7 @@ class YamlParser(object):
                 raise
 
             params.update(expanded_values)
-            params = deep_format(params, params)
+            params = deep_format(params, params, self._getTemplating(params))
             if combination_matches(params, excludes):
                 logger.debug('Excluding combination %s', str(params))
                 continue
@@ -378,7 +382,7 @@ class YamlParser(object):
 
             params['template-name'] = template_name
             expanded = deep_format(
-                template, params,
+                template, params, self._getTemplating(params),
                 self.jjb_config.yamlparser['allow_empty_variables'])
 
             job_name = expanded.get('name')

@@ -164,7 +164,7 @@ class ModuleRegistry(object):
                 # Template data contains values that should be interpolated
                 # into the component definition
                 component_data = deep_format(
-                    component_data, template_data,
+                    component_data, template_data, {},
                     self.jjb_config.yamlparser['allow_empty_variables'])
         else:
             # The component is a simple string name, eg "run-tests"
